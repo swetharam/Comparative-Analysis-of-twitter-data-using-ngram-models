@@ -16,10 +16,16 @@ hashtags=['data',"datascience","animalrescue","peace","marchforourlives"]
 for tag in hashtags:
         k=1
         f = open("input" + str(i)+".txt", "w", encoding="utf-8")
+        f1 =open("input" + str(i)+"test.txt", "w", encoding="utf-8")
         for tweet in tweepy.Cursor(api.search,q='#'+tag).items(50):
-            f.write(str(k)+":"+str(tweet.text))
-            print(str(k)+":"+tweet.text)
-            k+=1
+            if k<36:
+                f.write(str(k)+":"+str(tweet.text))
+                print(str(k)+":"+tweet.text)
+                k+=1
+            else:
+                f1.write(str(k) + ":" + str(tweet.text))
+                print(str(k) + ":" + tweet.text)
+                k += 1
 
         i+=1
 print("Input done for all hashtags ")
