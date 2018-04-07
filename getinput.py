@@ -57,7 +57,7 @@ def abbrcheck(word):
         if re.match(r'\b' + word + r'\b', i):
             k=i.split(' ', 1)[1]
             temp=word.replace(word,k)
-            print(temp)
+            # print(temp)
             return temp
 
 
@@ -155,3 +155,8 @@ editedtrain=checkslang(editedtrain)
 
 print("edited test"+str(editedtest))
 print("edited train"+str(editedtrain))
+
+for words in editedtest:
+    test.write(words+" ")
+for words in editedtrain:
+    train.write(words+" ")
