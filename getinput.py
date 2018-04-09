@@ -158,6 +158,7 @@ for sentence in listtest:
 
 print(editedtest)
 #traing data checking the slang and abbr dictionaries
+
 editedtrain=checkdict(editedtrain)
 editedtrain=checkslang(editedtrain)
 
@@ -187,6 +188,7 @@ for word in editedtrain:
 print(unigram_prob)
 
 ##################################################################
+#testing the unigram models on the testing data
 unigram_count_test={}
 i=0
 for list in editedtest:
@@ -219,3 +221,18 @@ for list in editedtest:
     i+=1
 
 print(unigram_prob_test)
+test_len=len(unigram_prob_test)
+temp=0
+k=0
+for prob in unigram_prob_test:
+    temp=temp+unigram_prob_test[k]
+    k+=1
+avgtest=temp/test_len
+print(avgtest)
+
+# #generation of bigram models:
+#
+# bigrm_train = nltk.bigrams(editedtrain)
+# print(bigrm_tr)
+
+
