@@ -2,6 +2,7 @@ import nltk
 from nltk.util import ngrams
 
 def word_grams(words, min=1, max=4):
+    print(words)
     s=[]
     s1=[]
     s2=[]
@@ -22,3 +23,16 @@ def word_grams(words, min=1, max=4):
     return s
 
 print (word_grams('one two three four'.split(' ')))
+# uni_test_sent={}
+# i=0
+# for sent in editedtest:
+#     temp=1
+#     for word in sent:
+#         # print(word)
+#         if word in unigram_prob:
+#             temp = temp* unigram_prob[word]
+#         else:
+#             continue
+#     i+=1
+#     uni_test_sent[i]=temp
+# print(uni_test_sent)

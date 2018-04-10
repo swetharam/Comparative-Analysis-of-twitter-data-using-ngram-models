@@ -2,6 +2,8 @@ import tweepy
 import re
 import nltk
 from nltk.corpus import stopwords
+import numpy as np
+from nltk.util import ngrams
 consumer_key= 'Quo2d5FNN6F9LNwqOExTufMxR'
 consumer_secret='qKHT8wy8PGrf7NcsONuUtk0RWhnvCrYbNp6NPqFOJbR4ZQldsT'
 
@@ -187,8 +189,9 @@ for word in editedtrain:
     unigram_prob[word]=temp
 print(unigram_prob)
 
-##################################################################
-#testing the unigram models on the testing data
+#################################################################
+# testing the unigram models on the testing data
+
 unigram_count_test={}
 i=0
 for list in editedtest:
@@ -200,7 +203,7 @@ for list in editedtest:
             temp[word] = 1
     unigram_count_test[i]=temp
     i+=1
-
+print("U-Test"+str(unigram_count_test))
 unigram_total_test={}
 i=0
 for list in editedtest:
@@ -220,7 +223,7 @@ for list in editedtest:
     unigram_prob_test[i]=temp
     i+=1
 
-print(unigram_prob_test)
+print("U-test prob"+str(unigram_prob_test))
 test_len=len(unigram_prob_test)
 temp=0
 k=0
@@ -230,9 +233,38 @@ for prob in unigram_prob_test:
 avgtest=temp/test_len
 print(avgtest)
 
-# #generation of bigram models:
+#generation of bigram models:
+
 #
-# bigrm_train = nltk.bigrams(editedtrain)
-# print(bigrm_tr)
-
-
+# arr=[]
+# for sent in editedtest:
+#     # print(sent)
+#     s2=[]
+#     for ngram in ngrams(sent, 2):
+#         s2.append(' '.join(str(i) for i in ngram))
+#     arr.append(s2)
+# print(arr)
+# bigrams1count_test={}
+# i=0
+# for list in arr:
+#     temp = {}
+#     for word in list:
+#         if word in temp:
+#             temp[word] += 1
+#         else:
+#             temp[word] = 1
+#     unigram_count_test[i]=temp
+#     i+=1
+# print()
+# for i in range(len(arr)):
+#          # word=arr[i]
+#          # wordcount=0
+#          # with open(train) as fp:
+#          #     for cnt, line in enumerate(fp):
+#          #         wordcount = sum(1 for _ in re.finditer(r'\b%s\b' % re.escape(word), line))
+#          #         bigrams1count.append(wordcount)
+#
+# print("The following values are for bigrams of the first sentence:")
+# B=np.array(bigrams1count).reshape(len(editedtrain),len(editedtrain))
+# print("\n")
+# print(B)
