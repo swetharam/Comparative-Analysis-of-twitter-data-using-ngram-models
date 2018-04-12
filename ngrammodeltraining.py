@@ -36,3 +36,11 @@ print (word_grams('one two three four'.split(' ')))
 #     i+=1
 #     uni_test_sent[i]=temp
 # print(uni_test_sent)
+# for nos in bigrams1count_test:
+#     temp = 1
+#     k = 0
+#     for val in nos:
+#         temp=(temp*int(val))/test_count[i]
+#     i+=1
+#     bigramprob.append(temp)
+# print(bigramprob)

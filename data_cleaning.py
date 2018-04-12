@@ -101,7 +101,7 @@ def slangcheck(word):
 #     # f = open("input" + str(i)+".txt", "r", encoding="utf-8")
 #     # lines = f.readlines()
 #     # for line in lines:
-normalize("スペイン RT evr lol brb  4u #datascience this is http:""/.893849  data that I am talking about. I love data man! #love acha pasand hai mujhe data")
+normalize("mark2 94컷', '94컷 30컷', '30컷 40컷  4u #datascience this is http:""/.893849  data that I am talking about. I love data man! #love acha pasand hai mujhe data")
 edited_words=checkdict(edited_words)
 edited_words=checkslang(edited_words)
 print(edited_words)
@@ -111,16 +111,16 @@ print(edited_words)
 ######################################################################
 #getting a unigram count of all the words:
 
-unigram_table={}
-
-fp = open("test","r",encoding="utf-8")
-words=fp.readlines()
-tokens = nltk.word_tokenize(words)
-
-for word in tokens:
-    if word in unigram_table:
-        unigram_table[word]+=1
-    else:
-        unigram_table[word]=1
-print(unigram_table)
+# unigram_table={}
+#
+# fp = open("test","r",encoding="utf-8")
+# words=fp.readlines()
+# tokens = nltk.word_tokenize(words)
+#
+# for word in tokens:
+#     if word in unigram_table:
+#         unigram_table[word]+=1
+#     else:
+#         unigram_table[word]=1
+# print(unigram_table)
 

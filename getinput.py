@@ -39,6 +39,7 @@ list=[]
 listtest=[]
 editedtest=[]
 editedtrain=[]
+editedtestbackup=[]
 
 ########################################################################################################################
 #STEP 1: GET THE DATA FROM TWITTER
@@ -134,9 +135,6 @@ def removestufftest(tokens):
                             temparr.append(token)
     return temparr
 
-
-
-
 #This performs normalization of data, first step here is tokenization.
 def normalize(sentence):
     tokens = nltk.word_tokenize(sentence)
@@ -157,20 +155,51 @@ for tweet in list:
 for sentence in listtest:
     senstr=sentence[0]
     normalize1(senstr)
-
-print(editedtest)
+# print(editedtest)
 #traing data checking the slang and abbr dictionaries
 
 editedtrain=checkdict(editedtrain)
 editedtrain=checkslang(editedtrain)
 
+
+#important step: making all the edits:
+temp1=[]
+temp2=[]
+for list in editedtest:
+    temp1=checkdict(list)
+    temp2.append(temp1)
+editedtest=temp2
+
+temp1=[]
+temp2=[]
+for list in editedtest:
+    temp1=checkslang(list)
+    temp2.append(temp1)
+editedtest=temp2
+
+for word in editedtest:
+    for item in word:
+        editedtestbackup.append(item)
+
+print(editedtestbackup)
+backupcount={}
+for words in editedtestbackup:
+    backupcount[words]=1
+    if words in editedtrain:
+        backupcount[words]+=1
+
+print(backupcount)
+####################################################
 #writing the sentences in a file:
 
 # for words in editedtest:
 #     test.write(words+" ")
-# for words in editedtrain:
-#     train.write(words+" ")
-
+for words in editedtrain:
+    train.write(words+" ")
+train.close()
+##############################################
+traindata=open("train","r",encoding="utf-8")
+trainlines=traindata.readlines()
 ##############################################
 #unigram model generation
 unigram_count={}
@@ -179,19 +208,20 @@ for word in editedtrain:
         unigram_count[word]+=1
     else:
         unigram_count[word]=1
-
-print(unigram_count)
+# print("Unigram count of the words in the train data")
+# print(unigram_count)
 totalwords=len(unigram_count.keys())
 
 unigram_prob={}
 for word in editedtrain:
     temp=unigram_count[word]/totalwords
     unigram_prob[word]=temp
-print(unigram_prob)
+# print("Unigram probabilities of the individual words in the train data")
+# print(unigram_prob)
 
-#################################################################
-# testing the unigram models on the testing data
-
+# #################################################################
+# # testing the unigram models on the testing data
+#
 unigram_count_test={}
 i=0
 for list in editedtest:
@@ -203,7 +233,8 @@ for list in editedtest:
             temp[word] = 1
     unigram_count_test[i]=temp
     i+=1
-print("U-Test"+str(unigram_count_test))
+# print("Unigram sentence each word's total ")
+# print(unigram_count_test)
 unigram_total_test={}
 i=0
 for list in editedtest:
@@ -223,7 +254,7 @@ for list in editedtest:
     unigram_prob_test[i]=temp
     i+=1
 
-print("U-test prob"+str(unigram_prob_test))
+# print("U-test prob"+str(unigram_prob_test))
 test_len=len(unigram_prob_test)
 temp=0
 k=0
@@ -231,40 +262,60 @@ for prob in unigram_prob_test:
     temp=temp+unigram_prob_test[k]
     k+=1
 avgtest=temp/test_len
-print(avgtest)
+# print(avgtest)
 
 #generation of bigram models:
 
-#
-# arr=[]
-# for sent in editedtest:
-#     # print(sent)
-#     s2=[]
-#     for ngram in ngrams(sent, 2):
-#         s2.append(' '.join(str(i) for i in ngram))
-#     arr.append(s2)
-# print(arr)
-# bigrams1count_test={}
-# i=0
-# for list in arr:
-#     temp = {}
-#     for word in list:
-#         if word in temp:
-#             temp[word] += 1
-#         else:
-#             temp[word] = 1
-#     unigram_count_test[i]=temp
-#     i+=1
-# print()
-# for i in range(len(arr)):
-#          # word=arr[i]
-#          # wordcount=0
-#          # with open(train) as fp:
-#          #     for cnt, line in enumerate(fp):
-#          #         wordcount = sum(1 for _ in re.finditer(r'\b%s\b' % re.escape(word), line))
-#          #         bigrams1count.append(wordcount)
-#
-# print("The following values are for bigrams of the first sentence:")
-# B=np.array(bigrams1count).reshape(len(editedtrain),len(editedtrain))
-# print("\n")
-# print(B)
+
+arr=[]
+for sent in editedtest:
+    # print(sent)
+    s2=[]
+    for ngram in ngrams(sent, 2):
+        s2.append(' '.join(str(i) for i in ngram))
+    arr.append(s2)
+print(arr)
+bigrams1count_test={}
+for list in arr:
+    for words in list:
+        bigrams1count_test[words]=1
+        if words in trainlines:
+            bigrams1count_test[words]+=1
+
+print("Bigram word counts")
+print(bigrams1count_test)
+
+i=0
+###########
+# #getting the total words in each sentence:
+test_count=[]
+for list in editedtest:
+    temp=0
+    for word in list:
+        temp+=1
+    test_count.append(temp)
+#imp
+print("No of words in each sentence")
+print(test_count)
+
+bigramprob=[]
+i=0
+
+for list in arr:
+    current = 1
+    for words in list:
+        k=0
+        temp=bigrams1count_test[words]
+        temp1=words.split()
+        abc=temp1[0]
+        value=backupcount[abc]
+        current=(current*temp)/(value*test_count[i])
+    bigramprob.append(current)
+    i+=1
+print(bigramprob)
+for prob in bigramprob:
+    temp=temp+prob
+bigramavg=temp/test_len
+print(bigramavg)
+################################################
+#trigram calculations
