@@ -37,6 +37,7 @@ def normalize(sentence):
 def removestuff(tokens):
         for token in tokens:
             if re.search('[a-zA-Z0_9]',token):
+                print(token)
                 if token.isalnum():
                     if token.isnumeric():
                         continue
@@ -101,7 +102,7 @@ def slangcheck(word):
 #     # f = open("input" + str(i)+".txt", "r", encoding="utf-8")
 #     # lines = f.readlines()
 #     # for line in lines:
-normalize("mark2 94컷', '94컷 30컷', '30컷 40컷  4u #datascience this is http:""/.893849  data that I am talking about. I love data man! #love acha pasand hai mujhe data")
+normalize("mark2 94 컷, 94 컷 30 컷  30 컷 40 컷  4u #datascience this is http:""/.893849  data that I am talking about. I love data man! #love acha pasand hai mujhe data")
 edited_words=checkdict(edited_words)
 edited_words=checkslang(edited_words)
 print(edited_words)

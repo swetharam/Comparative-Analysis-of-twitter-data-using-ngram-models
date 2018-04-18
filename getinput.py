@@ -17,6 +17,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True)
 # api=tweepy.API(auth)
 train=open("train","w",encoding="utf-8")
 test=open("test","w",encoding="utf-8")
+tempfile=open("tempfile","w",encoding="utf-8")
 #experimental section using lists
 i=1
 
@@ -34,7 +35,7 @@ with open('slang_dictionary.txt') as f:
     slanglist = [line.rstrip() for line in f]
 ########################################################
 k=1
-hashtags=['data',"datascience","machinelearning","bigdata","analytics","python","deeplearning","datascientists","AI","ML"]
+hashtags=['data'] #,"datascience","machinelearning","bigdata","analytics","python","deeplearning","datascientists","AI","ML"]
 list=[]
 listtest=[]
 editedtest=[]
@@ -181,14 +182,22 @@ for word in editedtest:
     for item in word:
         editedtestbackup.append(item)
 
+for words in editedtestbackup:
+    test.write(str(words+" "))
+test.close()
+testbackup=open("test","r",encoding="utf-8")
+variable=testbackup.readlines()
+editedtestbackup=variable[0].split()
 print(editedtestbackup)
+
+
 backupcount={}
 for words in editedtestbackup:
     backupcount[words]=1
     if words in editedtrain:
         backupcount[words]+=1
-
 print(backupcount)
+
 ####################################################
 #writing the sentences in a file:
 
@@ -201,7 +210,7 @@ train.close()
 traindata=open("train","r",encoding="utf-8")
 trainlines=traindata.readlines()
 ##############################################
-#unigram model generation
+# #unigram model generation
 unigram_count={}
 for word in editedtrain:
     if word in unigram_count:
@@ -262,7 +271,8 @@ for prob in unigram_prob_test:
     temp=temp+unigram_prob_test[k]
     k+=1
 avgtest=temp/test_len
-# print(avgtest)
+print("Average unigram probability")
+print(avgtest)
 
 #generation of bigram models:
 
@@ -275,16 +285,18 @@ for sent in editedtest:
         s2.append(' '.join(str(i) for i in ngram))
     arr.append(s2)
 print(arr)
+specialbigram={}
 bigrams1count_test={}
 for list in arr:
     for words in list:
         bigrams1count_test[words]=1
         if words in trainlines:
             bigrams1count_test[words]+=1
+            specialbigram[words]=bigrams1count_test[words]
 
 print("Bigram word counts")
 print(bigrams1count_test)
-
+tempfile.write(str(bigrams1count_test))
 i=0
 ###########
 # #getting the total words in each sentence:
@@ -307,7 +319,7 @@ for list in arr:
         k=0
         temp=bigrams1count_test[words]
         temp1=words.split()
-        abc=temp1[0]
+        abc=""+temp1[0]
         value=backupcount[abc]
         current=(current*temp)/(value*test_count[i])
     bigramprob.append(current)
@@ -316,6 +328,49 @@ print(bigramprob)
 for prob in bigramprob:
     temp=temp+prob
 bigramavg=temp/test_len
+print("Average bigram probability")
 print(bigramavg)
 ################################################
 #trigram calculations
+arr1=[]
+for sent in editedtest:
+    # print(sent)
+    s2=[]
+    for ngram in ngrams(sent, 3):
+        s2.append(' '.join(str(i) for i in ngram))
+    arr1.append(s2)
+print(arr1)
+
+trigramcount_test={}
+for list in arr1:
+    for words in list:
+        trigramcount_test[words]=1
+        if words in trainlines:
+            trigramcount_test[words]+=1
+
+print("Trigram word counts")
+print(trigramcount_test)
+i=0
+specialcount=len(specialbigram)
+trigramprob=[]
+for list in arr1:
+    current = 1
+    for words in list:
+        k=0
+        temp=trigramcount_test[words]
+        temp1=words.split()
+        abc=str(temp1[0])+" "+str(temp1[1])
+        if specialcount>0:
+            value=specialbigram[abc]
+        else:
+            value=1
+        current=(current*temp)/(value*test_count[i])
+    trigramprob.append(current)
+    i+=1
+print("Trigram probabilities:")
+print(trigramprob)
+for prob in trigramprob:
+    temp=temp+prob
+trigramavg=temp/test_len
+print("Average bigram probability")
+print(trigramavg)
